@@ -12,23 +12,23 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import com.luv2code.jsf.jdbc.entity.Professor;
+import com.luv2code.jsf.jdbc.entity.Department;
 
-public class ProfessorDbUtil {
+public class DepartmentDbUtil {
 
-	private static ProfessorDbUtil instance;
+	private static DepartmentDbUtil instance;
 	private DataSource dataSource;
 	private String jndiName = "java:comp/env/jdbc/test_university_db";
 	
-	public static ProfessorDbUtil getInstance() throws Exception {
+	public static DepartmentDbUtil getInstance() throws Exception {
 		if (instance == null) {
-			instance = new ProfessorDbUtil();
+			instance = new DepartmentDbUtil();
 		}
 		
 		return instance;
 	}
 	
-	private ProfessorDbUtil() throws Exception {		
+	private DepartmentDbUtil() throws Exception {		
 		dataSource = getDataSource();
 	}
 
@@ -40,9 +40,9 @@ public class ProfessorDbUtil {
 		return theDataSource;
 	}
 		
-	public List<Professor> getProfessors() throws Exception {
+	public List<Department> getDepartments() throws Exception {
 
-		List<Professor> professors = new ArrayList<>();
+		List<Department> departments = new ArrayList<>();
 
 		Connection myConn = null;
 		Statement myStmt = null;
@@ -51,7 +51,7 @@ public class ProfessorDbUtil {
 		try {
 			myConn = getConnection();
 
-			String sql = "select * from professor order by last_name";
+			String sql = "select * from department order by title";
 
 			myStmt = myConn.createStatement();
 
@@ -62,26 +62,24 @@ public class ProfessorDbUtil {
 				
 				// retrieve data from result set row
 				int id = myRs.getInt("id");
-				String firstName = myRs.getString("first_name");
-				String lastName = myRs.getString("last_name");
-				String email = myRs.getString("email");
+				String title = myRs.getString("title");
 
-				// create new Professor object
-				Professor tempProfessor = new Professor(id, firstName, lastName,
-						email);
 
-				// add it to the list of Professors
-				professors.add(tempProfessor);
+				// create new Department object
+				Department tempDepartment = new Department(id, title);
+
+				// add it to the list of Departments
+				departments.add(tempDepartment);
 			}
 			
-			return professors;		
+			return departments;		
 		}
 		finally {
 			close (myConn, myStmt, myRs);
 		}
 	}
 
-	public void addProfessor(Professor theProfessor) throws Exception {
+	public void addDepartment(Department theDepartment) throws Exception {
 
 		Connection myConn = null;
 		PreparedStatement myStmt = null;
@@ -89,14 +87,13 @@ public class ProfessorDbUtil {
 		try {
 			myConn = getConnection();
 
-			String sql = "insert into professor (first_name, last_name, email) values (?, ?, ?)";
+			String sql = "insert into department (title) values (?)";
 
 			myStmt = myConn.prepareStatement(sql);
 
 			// set params
-			myStmt.setString(1, theProfessor.getFirstName());
-			myStmt.setString(2, theProfessor.getLastName());
-			myStmt.setString(3, theProfessor.getEmail());
+			myStmt.setString(1, theDepartment.getTitle());
+
 			
 			myStmt.execute();			
 		}
@@ -106,7 +103,7 @@ public class ProfessorDbUtil {
 		
 	}
 	
-	public Professor getProfessor(int professorId) throws Exception {
+	public Department getDepartment(int departmentId) throws Exception {
 	
 		Connection myConn = null;
 		PreparedStatement myStmt = null;
@@ -115,39 +112,37 @@ public class ProfessorDbUtil {
 		try {
 			myConn = getConnection();
 
-			String sql = "select * from professor where id=?";
+			String sql = "select * from department where id=?";
 
 			myStmt = myConn.prepareStatement(sql);
 			
 			// set params
-			myStmt.setInt(1, professorId);
+			myStmt.setInt(1, departmentId);
 			
 			myRs = myStmt.executeQuery();
 
-			Professor theProfessor = null;
+			Department theDepartment = null;
 			
 			// retrieve data from result set row
 			if (myRs.next()) {
 				int id = myRs.getInt("id");
-				String firstName = myRs.getString("first_name");
-				String lastName = myRs.getString("last_name");
-				String email = myRs.getString("email");
+				String title = myRs.getString("title");
 
-				theProfessor = new Professor(id, firstName, lastName,
-						email);
+
+				theDepartment = new Department(id, title);
 			}
 			else {
-				throw new Exception("Could not find student id: " + professorId);
+				throw new Exception("Could not find department Id: " + departmentId);
 			}
 
-			return theProfessor;
+			return theDepartment;
 		}
 		finally {
 			close (myConn, myStmt, myRs);
 		}
 	}
 	
-	public void updateProfessor(Professor theProfessor) throws Exception {
+	public void updateDepartment(Department theDepartment) throws Exception {
 
 		Connection myConn = null;
 		PreparedStatement myStmt = null;
@@ -155,17 +150,16 @@ public class ProfessorDbUtil {
 		try {
 			myConn = getConnection();
 
-			String sql = "update professor "
-						+ " set first_name=?, last_name=?, email=?"
+			String sql = "update department "
+						+ " set title=?"
 						+ " where id=?";
 
 			myStmt = myConn.prepareStatement(sql);
 
 			// set params
-			myStmt.setString(1, theProfessor.getFirstName());
-			myStmt.setString(2, theProfessor.getLastName());
-			myStmt.setString(3, theProfessor.getEmail());
-			myStmt.setInt(4, theProfessor.getId());
+			myStmt.setString(1, theDepartment.getTitle());
+
+			myStmt.setInt(2, theDepartment.getId());
 			
 			myStmt.execute();
 		}
@@ -175,7 +169,7 @@ public class ProfessorDbUtil {
 		
 	}
 	
-	public void deleteProfessor(int professorId) throws Exception {
+	public void deleteDepartment(int departmentId) throws Exception {
 
 		Connection myConn = null;
 		PreparedStatement myStmt = null;
@@ -183,12 +177,12 @@ public class ProfessorDbUtil {
 		try {
 			myConn = getConnection();
 
-			String sql = "delete from professor where id=?";
+			String sql = "delete from department where id=?";
 
 			myStmt = myConn.prepareStatement(sql);
 
 			// set params
-			myStmt.setInt(1, professorId);
+			myStmt.setInt(1, departmentId);
 			
 			myStmt.execute();
 		}

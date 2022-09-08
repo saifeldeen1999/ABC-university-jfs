@@ -4,14 +4,14 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core">
 
 <f:metadata>
-  <f:event type="preRenderView" listener="#{studentController.loadStudents()}"/>
+  <f:event type="preRenderView" listener="#{departmentController.loadDepartments()}"/>
 </f:metadata>
 
 <h:head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-	<title>Student Management system</title>
+	<title>Department Management system</title>
 	
 	<h:outputStylesheet library="css" name="style.css"  />
 	
@@ -24,7 +24,7 @@
 			<h2>ABC University</h2>
 			<BR />
 			<h:outputLink value="list-professors.xhtml">Professor Managment System</h:outputLink>
-			<h:outputLink value="list-departments.xhtml">Department Managment System</h:outputLink>
+			<h:outputLink value="list-students.xhtml">Student Managment System</h:outputLink>
 		</div>
 	</div>
 
@@ -34,38 +34,23 @@
 		
 			<h:messages globalOnly="true" />
 		
-			<h:button value="Add Student" styleClass="add-student-button" outcome="add-student-form"/>			
+			<h:button value="Add Department" styleClass="add-department-button" outcome="add-department-form"/>			
 
 			<h:form>
 						
-			<h:dataTable value="#{studentController.students}" var="tempStudent"
+			<h:dataTable value="#{departmentController.departments}" var="tempStudent"
 				styleClass="demo-table" 
 				headerClass="demo-table-header"
 				rowClasses="demo-table-odd-row,demo-table-even-row">
 
 				<h:column>
 					<!-- the column header -->
-					<f:facet name="header">First Name</f:facet>
+					<f:facet name="header">Title</f:facet>
 
 					<!--  the value for each row -->
-					#{tempStudent.firstName}
+					#{tempStudent.title}
 				</h:column>
 
-				<h:column>
-					<!-- the column header -->
-					<f:facet name="header">Last Name</f:facet>
-
-					<!--  the value for each row -->
-					#{tempStudent.lastName}
-				</h:column>
-
-				<h:column>
-					<!-- the column header -->
-					<f:facet name="header">Email</f:facet>
-
-					<!--  the value for each row -->
-					#{tempStudent.email}
-				</h:column>
 
 				<h:column>
 					<!-- the column header -->
@@ -73,12 +58,12 @@
 
 					<!--  the value for each row -->
 					<h:commandLink value="Update"
-						action="#{studentController.loadStudent(tempStudent.id)}"/>
+						action="#{departmentController.loadDepartment(tempDepartment.id)}"/>
 					|
 
 					<h:commandLink value="Delete"
-						onclick="if (!confirm('Are you sure you want to delete this student?')) return false"
-						action="#{studentController.deleteStudent(tempStudent.id)}"/>
+						onclick="if (!confirm('Are you sure you want to delete this Department?')) return false"
+						action="#{departmentController.deleteDepartment(tempDepartment.id)}"/>
 					
 				</h:column>
 

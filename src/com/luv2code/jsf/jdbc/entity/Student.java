@@ -1,6 +1,6 @@
 package com.luv2code.jsf.jdbc.entity;
 
-import javax.faces.bean.ManagedBean;
+import javax.annotation.ManagedBean;
 
 @ManagedBean
 public class Student {

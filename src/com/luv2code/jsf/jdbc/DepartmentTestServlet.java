@@ -15,8 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
 @SuppressWarnings("serial")
-@WebServlet("/ProfessorTestServlet")
-public class ProfessorTestServlet extends HttpServlet {
+@WebServlet("/DepartmentTestServlet")
+public class DepartmentTestServlet extends HttpServlet {
 
 	@Resource(name = "jdbc/test_university_db")
 	private DataSource dataSource;
@@ -34,16 +34,16 @@ public class ProfessorTestServlet extends HttpServlet {
 		try {
 			myConn = dataSource.getConnection();
 
-			String sql = "select * from professor;";
+			String sql = "select * from department;";
 
 			myStmt = myConn.createStatement();
 
 			myRs = myStmt.executeQuery(sql);
 
 			while (myRs.next()) {
-				String email = myRs.getString("email");
-				out.println(email);
-				System.out.println(email);
+				String title = myRs.getString("title");
+				out.println(title);
+				System.out.println(title);
 			}
 		} catch (Exception exc) {
 			exc.printStackTrace();
